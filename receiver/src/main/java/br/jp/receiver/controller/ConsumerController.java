@@ -10,6 +10,11 @@ public class ConsumerController {
 
     @RabbitListener(queues = "filaEnvio")
     public void receberMensagem(@Payload Message mensagem) {
-        System.out.println(mensagem.toString());
+        System.out.println("Mensagem tradicional: " + mensagem.toString());
+    }
+
+    @RabbitListener(queues = "streamEnvio", containerFactory = "streamContainerFactory")
+    public void receberStream(String mensagem) {
+        System.out.println("Mensagem da stream: " + mensagem);
     }
 }

@@ -7,9 +7,15 @@ services:
     ports:
       - "5672:5672"      # Porta para o broker (apps se comunicam)
       - "15672:15672"    # Interface web
+      - "5552:5552"      # Stream
     environment:
+      RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS: "-rabbitmq_stream advertised_host localhost"
+      RABBITMQ_STREAM_LISTENERS_TCP_DEFAULT: "5552"
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
+    command: >
+      sh -c "rabbitmq-plugins enable --offline rabbitmq_stream &&
+             rabbitmq-server"
 
   postgres:
     image: postgres:13
