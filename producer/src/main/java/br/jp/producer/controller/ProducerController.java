@@ -36,4 +36,13 @@ public class ProducerController {
         }
     }
 
+    @PostMapping("/reservarComSuperStream")
+    public ResponseEntity<ResponseDTO> reservarSuperStream(@RequestBody RequestDTO requestDTO) {
+        try {
+            producerService.enviarParaSuperStream(requestDTO);
+            return ResponseEntity.ok().body(new ResponseDTO(200, "Super Stream: Pedido em processamento! Volte novamente mais tarde!"));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

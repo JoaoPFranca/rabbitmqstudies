@@ -11,19 +11,30 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ProducerService {
+    //Queue
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
+    //Stream
     Environment environment = Environment.builder().uri("rabbitmq-stream://localhost:5552").build();
     private final RabbitStreamTemplate rabbitStreamTemplate = new RabbitStreamTemplate(environment, "streamEnvio");
+
+    //Super Stream
+    @Autowired
+    private RabbitStreamTemplate streamTemplate;
+
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     public void enviarParaFila(RequestDTO dto) throws JsonProcessingException {
         rabbitTemplate.convertAndSend("filaEnvio", objectMapper.writeValueAsString(dto));
     }
-
     public void enviarParaStream(RequestDTO dto) throws JsonProcessingException {
         rabbitStreamTemplate.convertAndSend(objectMapper.writeValueAsString(dto));
     }
+
+    public void enviarParaSuperStream(RequestDTO dto) throws JsonProcessingException {
+        streamTemplate.convertAndSend(objectMapper.writeValueAsString(dto));
+    }
+
 }
